@@ -1,6 +1,6 @@
 {
   "name": "@trunkery/typescript-codegen",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Typescript code generator for GraphQL",
   "bin": {
     "trunkery-typescript-codegen": "dist/index.js"
@@ -9,8 +9,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc"
   },
   "author": "nsf <no.smile.face@gmail.com>",
   "license": "MIT",

@@ -64,6 +64,14 @@ function mapPrefix(prefixMap: Dict<string>, v: string): string {
   return v;
 }
 
+function exportInterfaceOrType(name: string, type: string) {
+  if (type.startsWith("{")) {
+    return `export interface ${name} ${type}`;
+  } else {
+    return `export type ${name} = ${type};`;
+  }
+}
+
 function generate(schema: GraphQLSchema, doc: DocumentNode, imports: Imports) {
   const { usedNamedTypesSorted, fragmentsSorted, operationsSorted, fragments, fragmentDeps } = resolveTypesSorted(
     schema,
@@ -91,14 +99,14 @@ function generate(schema: GraphQLSchema, doc: DocumentNode, imports: Imports) {
     } else if (isInputObjectType(t)) {
       const tt = convertType(t, undefined, fragments, imports.loadedImportsMap, true, true);
       tt.nullable = false; // hack: top level types are not nullable
-      types += `export interface ${nt.name} ${typeToString(tt, 0, true)}\n\n`;
+      types += `${exportInterfaceOrType(nt.name, typeToString(tt, 0, true))}\n\n`;
     } else {
       // must be a scalar type, skip it
     }
   }
 
   for (const frag of fragmentsSorted) {
-    types += `export interface ${frag.name}Fragment ${typeToString(frag.value.type)}\n\n`;
+    types += `${exportInterfaceOrType(`${frag.name}Fragment`, typeToString(frag.value.type))}\n\n`;
     files.push({
       name: `fragments/${frag.name}.ts`,
       text: `export default ${JSON.stringify(print(frag.value.node) + "\n")};`,
@@ -106,8 +114,8 @@ function generate(schema: GraphQLSchema, doc: DocumentNode, imports: Imports) {
   }
 
   for (const op of operationsSorted) {
-    types += `export interface ${op.name} ${typeToString(op.value.operation, 0, false)}\n\n`;
-    types += `export interface ${op.name}Variables ${typeToString(op.value.variables, 0, true)}\n\n`;
+    types += `${exportInterfaceOrType(op.name, typeToString(op.value.operation, 0, false))}\n\n`;
+    types += `${exportInterfaceOrType(`${op.name}Variables`, typeToString(op.value.variables, 0, true))}\n\n`;
     types += `export interface ${op.name}Meta {\n`;
     types += `  __opType: ${op.name}, __opVariablesType: ${op.name}Variables, __tag: 'graphql-operation'\n`;
     types += `}\n\n`;
