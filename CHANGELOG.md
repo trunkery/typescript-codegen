@@ -11,6 +11,12 @@ adheres to [Semantic Versioning][semantic versioning].
 
 ## [Released]
 
+## 1.1.1 - 2021-09-15
+
+### Added
+
+- Add typescript type definitions (.d.ts files).
+
 ## 1.1.0 - 2021-09-15
 
 ### Added

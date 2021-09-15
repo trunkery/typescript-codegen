@@ -5,7 +5,7 @@ import _ from "lodash";
 import { graphqlTypescriptCodegen } from "./lib";
 
 const program = new Command()
-  .version("1.1.0", "-v, --version")
+  .version("1.1.1", "-v, --version")
   .arguments("<directory>")
   .option("-I, --include <directory...>", "consider the following directories when importing fragments")
   .option("-t, --token <token>", "jwt token for authorization")
