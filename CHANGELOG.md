@@ -11,6 +11,12 @@ adheres to [Semantic Versioning][semantic versioning].
 
 ## [Released]
 
+## 1.1.0 - 2021-09-15
+
+### Added
+
+- Make it possible to use this project as a library.
+
 ## 1.0.1 - 2021-09-02
 
 ### Fixed
