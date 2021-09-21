@@ -11,6 +11,12 @@ adheres to [Semantic Versioning][semantic versioning].
 
 ## [Released]
 
+## 1.1.3 - 2021-09-21
+
+### Fixed
+
+- Fix minification producing broken GraphQL operations.
+
 ## 1.1.2 - 2021-09-21
 
 ### Changed
