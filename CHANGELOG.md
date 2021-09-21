@@ -11,6 +11,12 @@ adheres to [Semantic Versioning][semantic versioning].
 
 ## [Released]
 
+## 1.1.2 - 2021-09-21
+
+### Changed
+
+- Minify graphql operations and fragments before writing them out.
+
 ## 1.1.1 - 2021-09-15
 
 ### Added

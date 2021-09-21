@@ -36,6 +36,7 @@ import {
 import { Dict, nonNull } from "./util";
 import chalk from "chalk";
 import prompts from "prompts";
+import gqlmin from "gqlmin";
 
 interface GeneratedFile {
   name: string;
@@ -109,7 +110,7 @@ function generate(schema: GraphQLSchema, doc: DocumentNode, imports: Imports) {
     types += `${exportInterfaceOrType(`${frag.name}Fragment`, typeToString(frag.value.type))}\n\n`;
     files.push({
       name: `fragments/${frag.name}.ts`,
-      text: `export default ${JSON.stringify(print(frag.value.node) + "\n")};`,
+      text: `export default ${JSON.stringify(gqlmin(print(frag.value.node)) + "\n")};`,
     });
   }
 
@@ -139,7 +140,7 @@ function generate(schema: GraphQLSchema, doc: DocumentNode, imports: Imports) {
 
     const depNames = _.keys(allDepNames).sort();
     const depImports = _.join([..._.keys(allDepImports).sort(), `import { ${op.name}Meta } from "../types";`], "\n");
-    const strings = _.join([...depNames, JSON.stringify(print(op.value.node))], " + ");
+    const strings = _.join([...depNames, JSON.stringify(gqlmin(print(op.value.node)))], " + ");
     files.push({
       name: `operations/${op.name}.ts`,
       text: `${depImports}\nexport default (${strings}) as unknown as ${op.name}Meta;`,
