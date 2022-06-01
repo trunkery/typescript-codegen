@@ -2,11 +2,12 @@
 
 import { Command } from "commander";
 import _ from "lodash";
-import { graphqlTypescriptCodegen } from "./lib";
+import { contentModelTypescriptCodegen, graphqlTypescriptCodegen } from "./lib";
 
-const program = new Command()
-  .version("1.1.1", "-v, --version")
-  .arguments("<directory>")
+const program = new Command().version("2.0.0", "-v, --version");
+
+program
+  .command("graphql <directory>")
   .option("-I, --include <directory...>", "consider the following directories when importing fragments")
   .option("-t, --token <token>", "jwt token for authorization")
   .option("-q, --quiet", "don't print anything but errors, don't ask for input")
@@ -26,6 +27,19 @@ const program = new Command()
       schemaPathOrURL: opts.schema,
       schema: undefined,
       token: opts.token,
+    });
+  });
+
+program
+  .command("content-model")
+  .requiredOption("-i, --input <file>", "input content model json file")
+  .requiredOption("-o, --output <file>", "output typescript file to generate")
+  .option("-q, --quiet", "don't print anything but errors, don't ask for input")
+  .action(async (opts) => {
+    await contentModelTypescriptCodegen({
+      input: opts.input,
+      output: opts.output,
+      quiet: !!opts.quiet,
     });
   });
 

@@ -32,6 +32,8 @@ import {
   Source,
   parse,
   ValidationRule,
+  Kind,
+  OperationTypeNode,
 } from "graphql";
 import _ from "lodash";
 import glob from "glob";
@@ -354,7 +356,7 @@ function walkType(t: GraphQLType, ss: SelectionSetNode | undefined, cb: (t: Grap
     const fieldTypes = t.getFields();
     for (const sel of ss.selections) {
       switch (sel.kind) {
-        case "Field":
+        case Kind.FIELD:
           walkType(fieldTypes[sel.name.value].type, sel.selectionSet, cb);
           break;
       }
@@ -365,7 +367,7 @@ function walkType(t: GraphQLType, ss: SelectionSetNode | undefined, cb: (t: Grap
 
 function walkTypeNode(t: TypeNode, cb: (t: TypeNode) => void) {
   cb(t);
-  if (t.kind === "ListType" || t.kind === "NonNullType") {
+  if (t.kind === Kind.LIST_TYPE || t.kind === Kind.NON_NULL_TYPE) {
     walkTypeNode(t.type, cb);
   }
 }
@@ -416,12 +418,12 @@ export function typeToString(t: TSType, ident: number = 0, useUndefined = false)
 
 function convertTypeNode(t: TypeNode, nullable: boolean = true): TSType {
   switch (t.kind) {
-    case "ListType":
+    case Kind.LIST_TYPE:
       return { type: "array", element: convertTypeNode(t.type), nullable };
-    case "NamedType":
+    case Kind.NAMED_TYPE:
       const name = builtInScalarMap[t.name.value];
       return { type: "named", name: name || t.name.value, nullable };
-    case "NonNullType":
+    case Kind.NON_NULL_TYPE:
       return convertTypeNode(t.type, false);
   }
 }
@@ -479,7 +481,7 @@ export function convertType(
 
     if (ss.selections.length === 1) {
       const sel = ss.selections[0];
-      if (sel.kind === "FragmentSpread") {
+      if (sel.kind === Kind.FRAGMENT_SPREAD) {
         return { type: "named", name: `${sel.name.value}Fragment`, nullable };
       }
     }
@@ -491,11 +493,11 @@ export function convertType(
     const fieldTypes = t.getFields();
     for (const sel of ss.selections) {
       switch (sel.kind) {
-        case "Field":
+        case Kind.FIELD:
           const name = aliasOrName(sel);
           obj.fields[name] = convertType(fieldTypes[sel.name.value].type, sel.selectionSet, fragments, imports);
           break;
-        case "FragmentSpread":
+        case Kind.FRAGMENT_SPREAD:
           const fragment = fragments[sel.name.value] || imports[sel.name.value]?.fragment;
           if (fragment && fragment.type.type === "object") {
             // once we reach the point where we use intersection, remove nullable flag from its members
@@ -511,7 +513,7 @@ export function convertType(
             throw new Error(`invalid fragment reference: ${sel.name.value} (${reason})`);
           }
           break;
-        case "InlineFragment":
+        case Kind.INLINE_FRAGMENT:
           // TODO: embed it into fields
           throw new Error("not implemented yet");
       }
@@ -621,13 +623,13 @@ export function extractFragmentDeps(ss: SelectionSetNode | undefined, deps: Dict
 
   for (const sel of ss.selections) {
     switch (sel.kind) {
-      case "Field":
+      case Kind.FIELD:
         extractFragmentDeps(sel.selectionSet, deps);
         break;
-      case "FragmentSpread":
+      case Kind.FRAGMENT_SPREAD:
         deps[sel.name.value] = true;
         break;
-      case "InlineFragment":
+      case Kind.INLINE_FRAGMENT:
         throw new Error("not implemented yet");
     }
   }
@@ -676,7 +678,7 @@ export function resolveTypes(schema: GraphQLSchema, doc: DocumentNode, imports: 
   const nameDedup = {} as Dict<boolean>;
   const namedDefinitions: { name: string; def: DefinitionNode; resolved: boolean }[] = [];
   for (const def of doc.definitions) {
-    if (def.kind === "OperationDefinition" || def.kind === "FragmentDefinition") {
+    if (def.kind === Kind.OPERATION_DEFINITION || def.kind === Kind.FRAGMENT_DEFINITION) {
       const name = def.name!.value;
       if (nameDedup[name]) throw new Error(`definition "${name}" (${def.kind}) already exists`);
       nameDedup[name] = true;
@@ -704,20 +706,20 @@ export function resolveTypes(schema: GraphQLSchema, doc: DocumentNode, imports: 
 
       try {
         switch (def.kind) {
-          case "OperationDefinition":
+          case Kind.OPERATION_DEFINITION:
             // when fragment whitelist is given, we're only interested in fragments
             let name = "";
             let type: GraphQLType | null | undefined;
             switch (def.operation) {
-              case "mutation":
+              case OperationTypeNode.MUTATION:
                 type = schema.getMutationType();
                 name = `${def.name!.value}Mutation`;
                 break;
-              case "query":
+              case OperationTypeNode.QUERY:
                 type = schema.getQueryType();
                 name = `${def.name!.value}Query`;
                 break;
-              case "subscription":
+              case OperationTypeNode.SUBSCRIPTION:
                 type = schema.getSubscriptionType();
                 name = `${def.name!.value}Subscription`;
                 break;
@@ -733,7 +735,7 @@ export function resolveTypes(schema: GraphQLSchema, doc: DocumentNode, imports: 
             _.forEach(def.variableDefinitions, (vd) => {
               varFields[vd.variable.name.value] = convertTypeNode(vd.type);
               walkTypeNode(vd.type, (t) => {
-                if (t.kind === "NamedType") usedNamedTypes[t.name.value] = true;
+                if (t.kind === Kind.NAMED_TYPE) usedNamedTypes[t.name.value] = true;
               });
             });
             const variables = { type: "object", fields: varFields } as TSObject;
@@ -745,7 +747,7 @@ export function resolveTypes(schema: GraphQLSchema, doc: DocumentNode, imports: 
               node: def,
             };
             break;
-          case "FragmentDefinition":
+          case Kind.FRAGMENT_DEFINITION:
             // skipping this fragment?
             const t = schema.getType(def.typeCondition.name.value);
             if (t) {
@@ -764,7 +766,7 @@ export function resolveTypes(schema: GraphQLSchema, doc: DocumentNode, imports: 
             break;
         }
         ndef.resolved = true;
-      } catch (err) {
+      } catch (err: any) {
         if (def.loc) {
           errors.push(`${def.loc.source.name}:${JSON.stringify(def.loc)} ${err.toString()}`);
         } else {

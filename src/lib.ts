@@ -1,6 +1,3 @@
-#!/usr/bin/env node
-
-import { Command } from "commander";
 import _ from "lodash";
 import fs from "fs";
 import glob from "glob";
@@ -18,6 +15,7 @@ import {
   print,
   buildClientSchema,
   buildSchema,
+  Kind,
 } from "graphql";
 import { stripIgnoredCharacters } from "graphql/utilities";
 import {
@@ -33,10 +31,11 @@ import {
   loadImports,
   extractFragmentDeps,
   Imports,
-} from "./typescript";
+} from "./graphql";
 import { Dict, nonNull } from "./util";
 import chalk from "chalk";
 import prompts from "prompts";
+import { generateContentModelTypescriptCode, parseContentModelSchema } from "./content-model";
 
 interface GeneratedFile {
   name: string;
@@ -195,7 +194,7 @@ async function fetchSchema(
   }
 }
 
-export interface Config {
+export interface GraphQLTypescriptCodegenConfig {
   directory: string;
   includes: string[];
   quiet: boolean;
@@ -206,7 +205,7 @@ export interface Config {
   token: string | undefined;
 }
 
-export async function graphqlTypescriptCodegen(config: Config) {
+export async function graphqlTypescriptCodegen(config: GraphQLTypescriptCodegenConfig) {
   const writeLog = writeLogFunc(config.quiet);
   const tsPattern = path.join(config.directory, "**", "*.ts");
   const tsFilePaths = glob.sync(tsPattern);
@@ -236,7 +235,7 @@ export async function graphqlTypescriptCodegen(config: Config) {
       const [, name] = _.split(dep, ":", 2);
       const frag = nonNull(imp.context.fragments[name], `fragment: ${name}`);
       additionalFragments[name] = {
-        kind: "Document",
+        kind: Kind.DOCUMENT,
         definitions: [frag.node],
       };
     }
@@ -279,5 +278,25 @@ export async function graphqlTypescriptCodegen(config: Config) {
         }
       }
     }
+  }
+}
+
+export interface ContentModelTypescriptCodegenConfig {
+  input: string;
+  output: string;
+  quiet: boolean;
+}
+
+export async function contentModelTypescriptCodegen(config: ContentModelTypescriptCodegenConfig) {
+  const writeLog = writeLogFunc(config.quiet);
+  writeLog(`loading content model schema from "${config.input}"`);
+  const data = fs.readFileSync(config.input, "utf-8");
+  const schema = parseContentModelSchema(data);
+  writeLog(`generating typescript code`);
+  const r = generateContentModelTypescriptCode(schema);
+  if (config.output === "-") {
+    console.log(r);
+  } else {
+    writeFileIfChanged(writeLog, config.output, r);
   }
 }
