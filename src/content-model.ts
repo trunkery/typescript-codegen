@@ -99,7 +99,7 @@ const ContentModelSchema = ss.type({
   json: ContentModelType,
 });
 
-type ContentModelSchemaType = ss.Infer<typeof ContentModelSchema>;
+export type ContentModelSchemaType = ss.Infer<typeof ContentModelSchema>;
 
 export function parseContentModelSchema(data: string): ContentModelSchemaType {
   let j: any;
@@ -142,11 +142,13 @@ function generateTypeFor(v: ContentModelSchemaType["json"]): string {
   }
 }
 
-export function generateContentModelTypescriptCode(schema: ContentModelSchemaType): string {
+export function generateContentModelTypescriptCode(schemas: ContentModelSchemaType[]): string {
   let out = "";
-
   out += `import * as ss from "superstruct";\n`;
-  out += `export const ContentModel = ${generateTypeFor(schema.json)};\n`;
-
+  out += `export const schemas = {\n`;
+  for (const schema of schemas) {
+    out += `${JSON.stringify(schema.name)}: ${generateTypeFor(schema.json)},\n`;
+  }
+  out += `};\n`;
   return out;
 }

@@ -10,6 +10,14 @@ This project adheres to [Semantic Versioning][semantic versioning].
 
 ## [Released]
 
+## 3.0.0 - 2022-06-08
+
+### Major Changes
+
+- Content Model generator: change the interface and output, it generates types
+  and checkers for multiple schemas at once now. The idea is to make the path from
+  content model name to content model type shorter.
+
 ## 2.1.0 - 2022-06-08
 
 ### Minor Changes

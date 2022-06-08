@@ -35,7 +35,7 @@ import {
 import { Dict, nonNull } from "./util";
 import chalk from "chalk";
 import prompts from "prompts";
-import { generateContentModelTypescriptCode, parseContentModelSchema } from "./content-model";
+import { ContentModelSchemaType, generateContentModelTypescriptCode, parseContentModelSchema } from "./content-model";
 
 interface GeneratedFile {
   name: string;
@@ -282,18 +282,22 @@ export async function graphqlTypescriptCodegen(config: GraphQLTypescriptCodegenC
 }
 
 export interface ContentModelTypescriptCodegenConfig {
-  input: string;
+  input: string[];
   output: string;
   quiet: boolean;
 }
 
 export async function contentModelTypescriptCodegen(config: ContentModelTypescriptCodegenConfig) {
   const writeLog = writeLogFunc(config.quiet);
-  writeLog(`loading content model schema from "${config.input}"`);
-  const data = fs.readFileSync(config.input, "utf-8");
-  const schema = parseContentModelSchema(data);
+  const schemas: ContentModelSchemaType[] = [];
+  for (const input of config.input) {
+    writeLog(`loading content model schema from "${input}"`);
+    const data = fs.readFileSync(input, "utf-8");
+    const schema = parseContentModelSchema(data);
+    schemas.push(schema);
+  }
   writeLog(`generating typescript code`);
-  const r = generateContentModelTypescriptCode(schema);
+  const r = generateContentModelTypescriptCode(schemas);
   if (config.output === "-") {
     console.log(r);
   } else {

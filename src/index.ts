@@ -32,7 +32,7 @@ program
 
 program
   .command("content-model")
-  .requiredOption("-i, --input <file>", "input content model json file")
+  .requiredOption("-i, --input <files...>", "input content model json file")
   .requiredOption("-o, --output <file>", "output typescript file to generate")
   .option("-q, --quiet", "don't print anything but errors, don't ask for input")
   .action(async (opts) => {
