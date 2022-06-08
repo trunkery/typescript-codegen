@@ -10,6 +10,12 @@ This project adheres to [Semantic Versioning][semantic versioning].
 
 ## [Released]
 
+## 2.1.0 - 2022-06-08
+
+### Minor Changes
+
+- Content Model generator: generate proper type for enums.
+
 ## 2.0.0 - 2022-05-31
 
 ### Major Changes

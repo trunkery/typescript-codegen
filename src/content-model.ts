@@ -1,25 +1,25 @@
 import * as ss from "superstruct";
 
 const ContentModelStringKind = ss.enums([
-  "string",
-  "textarea",
-  "image_file_id",
-  "file_id",
-  "product_id",
-  "variant_id",
-  "category_id",
-  "brand_id",
-  "content_block_id",
-  "web_url",
-  "dropdown",
-  "radio",
+  "string" as const,
+  "textarea" as const,
+  "image_file_id" as const,
+  "file_id" as const,
+  "product_id" as const,
+  "variant_id" as const,
+  "category_id" as const,
+  "brand_id" as const,
+  "content_block_id" as const,
+  "web_url" as const,
+  "dropdown" as const,
+  "radio" as const,
 ]);
 
-const ContentModelNumberKind = ss.enums(["number", "percentage", "rating"]);
+const ContentModelNumberKind = ss.enums(["number" as const, "percentage" as const, "rating" as const]);
 
-const ContentModelBooleanKind = ss.enums(["checkbox", "toggle"]);
+const ContentModelBooleanKind = ss.enums(["checkbox" as const, "toggle" as const]);
 
-const ContentModelDatetimeKind = ss.enums(["date", "datetime"]);
+const ContentModelDatetimeKind = ss.enums(["date" as const, "datetime" as const]);
 
 const ContentModelEnumValue = ss.type({
   label: ss.string(),
@@ -125,6 +125,10 @@ function generateTypeFor(v: ContentModelSchemaType["json"]): string {
     case "boolean":
       return "ss.boolean()";
     case "string":
+      const e = v.validation?.enum;
+      if (e) {
+        return `ss.enums([${e.map((v) => `${JSON.stringify(v.value)} as const`).join(",")}])`;
+      }
     case "datetime":
       return "ss.string()";
     case "number":
