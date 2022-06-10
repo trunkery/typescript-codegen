@@ -1,32 +1,33 @@
 import * as ss from "superstruct";
 
-const ContentModelStringKind = ss.enums([
+export const ContentModelStringKind = ss.enums([
+  "brand_id" as const,
+  "category_id" as const,
+  "color" as const,
+  "content_block_id" as const,
+  "dropdown" as const,
+  "file_id" as const,
+  "image_file_id" as const,
+  "product_id" as const,
+  "radio" as const,
   "string" as const,
   "textarea" as const,
-  "image_file_id" as const,
-  "file_id" as const,
-  "product_id" as const,
   "variant_id" as const,
-  "category_id" as const,
-  "brand_id" as const,
-  "content_block_id" as const,
   "web_url" as const,
-  "dropdown" as const,
-  "radio" as const,
 ]);
 
-const ContentModelNumberKind = ss.enums(["number" as const, "percentage" as const, "rating" as const]);
+export const ContentModelNumberKind = ss.enums(["number" as const, "percentage" as const, "rating" as const]);
 
-const ContentModelBooleanKind = ss.enums(["checkbox" as const, "toggle" as const]);
+export const ContentModelBooleanKind = ss.enums(["checkbox" as const, "toggle" as const]);
 
-const ContentModelDatetimeKind = ss.enums(["date" as const, "datetime" as const]);
+export const ContentModelDatetimeKind = ss.enums(["date" as const, "datetime" as const]);
 
-const ContentModelEnumValue = ss.type({
+export const ContentModelEnumValue = ss.type({
   label: ss.string(),
   value: ss.string(),
 });
 
-const ContentModelStringValidation = ss.type({
+export const ContentModelStringValidation = ss.type({
   minLength: ss.optional(ss.number()),
   minLengthError: ss.optional(ss.string()),
   maxLength: ss.optional(ss.number()),
@@ -37,7 +38,7 @@ const ContentModelStringValidation = ss.type({
   defaultValue: ss.optional(ss.string()),
 });
 
-const ContentModelNumberValidation = ss.type({
+export const ContentModelNumberValidation = ss.type({
   min: ss.optional(ss.number()),
   minError: ss.optional(ss.string()),
   max: ss.optional(ss.number()),
@@ -45,55 +46,55 @@ const ContentModelNumberValidation = ss.type({
   integer: ss.optional(ss.boolean()),
 });
 
-const ContentModelTypeFieldProps = ss.type({
+export const ContentModelTypeFieldProps = ss.type({
   name: ss.string(),
   label: ss.optional(ss.string()),
 });
 
-const ContentModelType_String = ss.type({
+export const ContentModelType_String = ss.type({
   type: ss.literal("string"),
   kind: ContentModelStringKind,
   validation: ss.optional(ContentModelStringValidation),
   help: ss.optional(ss.string()),
 });
 
-const ContentModelType_Datetime = ss.type({
+export const ContentModelType_Datetime = ss.type({
   type: ss.literal("datetime"),
   kind: ContentModelDatetimeKind,
   help: ss.optional(ss.string()),
 });
 
-const ContentModelType_Boolean = ss.type({
+export const ContentModelType_Boolean = ss.type({
   type: ss.literal("boolean"),
   kind: ContentModelBooleanKind,
   help: ss.optional(ss.string()),
 });
 
-const ContentModelType_Number = ss.type({
+export const ContentModelType_Number = ss.type({
   type: ss.literal("number"),
   kind: ContentModelNumberKind,
-  validation: ContentModelNumberValidation,
+  validation: ss.optional(ContentModelNumberValidation),
   help: ss.optional(ss.string()),
 });
 
-const NonObjectContentModelType = ss.union([
+export const NonObjectContentModelType = ss.union([
   ContentModelType_String,
   ContentModelType_Datetime,
   ContentModelType_Boolean,
   ContentModelType_Number,
 ]);
 
-const ContentModelObjectField = ss.intersection([NonObjectContentModelType, ContentModelTypeFieldProps]);
+export const ContentModelObjectField = ss.intersection([NonObjectContentModelType, ContentModelTypeFieldProps]);
 
-const ContentModelType_Object = ss.type({
+export const ContentModelType_Object = ss.type({
   type: ss.literal("object"),
   fields: ss.array(ContentModelObjectField),
   help: ss.optional(ss.string()),
 });
 
-const ContentModelType = ss.union([ContentModelType_Object, NonObjectContentModelType]);
+export const ContentModelType = ss.union([ContentModelType_Object, NonObjectContentModelType]);
 
-const ContentModelSchema = ss.type({
+export const ContentModelSchema = ss.type({
   label: ss.optional(ss.string()),
   name: ss.string(),
   json: ContentModelType,

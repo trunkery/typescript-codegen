@@ -10,6 +10,13 @@ This project adheres to [Semantic Versioning][semantic versioning].
 
 ## [Released]
 
+## 3.1.0 - 2022-06-10
+
+### Minor Changes
+
+- Add "color" string kind to content model.
+- Export more content model schema components.
+
 ## 3.0.0 - 2022-06-08
 
 ### Major Changes
