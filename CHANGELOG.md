@@ -10,6 +10,13 @@ This project adheres to [Semantic Versioning][semantic versioning].
 
 ## [Released]
 
+## 3.1.1 - 2022-07-15
+
+### Patch Changes
+
+- Fix graphql codegen case: fragment uses fragment spread of a fragment which in turns also contains fragment spread.
+  In internal codegen type system this generates an intersection with intersection type.
+
 ## 3.1.0 - 2022-06-10
 
 ### Minor Changes

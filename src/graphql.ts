@@ -499,7 +499,7 @@ export function convertType(
           break;
         case Kind.FRAGMENT_SPREAD:
           const fragment = fragments[sel.name.value] || imports[sel.name.value]?.fragment;
-          if (fragment && fragment.type.type === "object") {
+          if (fragment && (fragment.type.type === "intersection" || fragment.type.type === "object")) {
             // once we reach the point where we use intersection, remove nullable flag from its members
             // intersection itself becomes nullable and that's enough
             obj.nullable = undefined;
@@ -509,7 +509,7 @@ export function convertType(
             out = isect;
           } else {
             // what do we do here?
-            const reason = !fragment ? "non-existent fragment" : `invalid type: ${fragment.type}`;
+            const reason = !fragment ? "non-existent fragment" : `invalid type: ${JSON.stringify(fragment.type)}`;
             throw new Error(`invalid fragment reference: ${sel.name.value} (${reason})`);
           }
           break;
