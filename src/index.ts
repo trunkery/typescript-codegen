@@ -35,11 +35,13 @@ program
   .requiredOption("-i, --input <files...>", "input content model json file")
   .requiredOption("-o, --output <file>", "output typescript file to generate")
   .option("-q, --quiet", "don't print anything but errors, don't ask for input")
+  .option("--api <url>", "json api url", "https://api.trunkery.com/relay.json")
   .action(async (opts) => {
     await contentModelTypescriptCodegen({
       input: opts.input,
       output: opts.output,
       quiet: !!opts.quiet,
+      api: opts.api,
     });
   });
 

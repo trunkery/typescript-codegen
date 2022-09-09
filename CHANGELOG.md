@@ -10,6 +10,11 @@ This project adheres to [Semantic Versioning][semantic versioning].
 
 ## [Released]
 
+## 3.2.0 - 2022-09-09
+
+- Content model type generator will now fetch built-in content models from API server and add them to the output.
+  This also adds "--api" option, which allows you to override API server URL (internal usage mainly).
+
 ## 3.1.1 - 2022-07-15
 
 ### Patch Changes

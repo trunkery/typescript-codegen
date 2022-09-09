@@ -285,11 +285,29 @@ export interface ContentModelTypescriptCodegenConfig {
   input: string[];
   output: string;
   quiet: boolean;
+  api: string;
 }
 
 export async function contentModelTypescriptCodegen(config: ContentModelTypescriptCodegenConfig) {
   const writeLog = writeLogFunc(config.quiet);
   const schemas: ContentModelSchemaType[] = [];
+  writeLog(`loading built-in content models from api: ${config.api}`);
+  const resp = await superagent
+    .post(config.api)
+    .http2()
+    .accept("json")
+    .send([{ method: "GET", url: "info/content_models.json" }]);
+
+  try {
+    for (const data of resp.body[0].response) {
+      const schema = parseContentModelSchema(data.json);
+      writeLog(` - ${schema.name}`);
+      schemas.push(schema);
+    }
+  } catch {
+    // do nothing
+  }
+
   for (const input of config.input) {
     writeLog(`loading content model schema from "${input}"`);
     const data = fs.readFileSync(input, "utf-8");
