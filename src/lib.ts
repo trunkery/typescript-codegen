@@ -177,16 +177,23 @@ async function fetchSchema(
   token: string | undefined
 ): Promise<GraphQLSchema> {
   if (_.startsWith(pathOrURL, "https://")) {
-    writeLog(`fetching schema via introspection query from "${pathOrURL}"`);
-    const introspectionQuery = getIntrospectionQuery({ descriptions: false, inputValueDeprecation: false });
-    const resp = await superagent
-      .post(pathOrURL)
-      .http2()
-      .accept("json")
-      .use(addTokenMaybe(token))
-      .send({ query: introspectionQuery });
-    if (resp.body.errors) throw new Error(`failed fetching schema: ${resp.body.errors}`);
-    return buildClientSchema(resp.body.data);
+    if (_.endsWith(pathOrURL, ".graphql")) {
+      writeLog(`fetching schema from remote file "${pathOrURL}"`);
+      const resp = await superagent.get(pathOrURL).http2().responseType("arraybuffer").send();
+      const buf = resp.body as ArrayBuffer;
+      return buildSchema(new TextDecoder().decode(buf));
+    } else {
+      writeLog(`fetching schema via introspection query from "${pathOrURL}"`);
+      const introspectionQuery = getIntrospectionQuery({ descriptions: false, inputValueDeprecation: false });
+      const resp = await superagent
+        .post(pathOrURL)
+        .http2()
+        .accept("json")
+        .use(addTokenMaybe(token))
+        .send({ query: introspectionQuery });
+      if (resp.body.errors) throw new Error(`failed fetching schema: ${resp.body.errors}`);
+      return buildClientSchema(resp.body.data);
+    }
   } else {
     writeLog(`loading schema from file "${pathOrURL}"`);
     const data = fs.readFileSync(pathOrURL, "utf8");

@@ -4,7 +4,7 @@ import { Command } from "commander";
 import _ from "lodash";
 import { contentModelTypescriptCodegen, graphqlTypescriptCodegen } from "./lib";
 
-const program = new Command().version("2.0.0", "-v, --version");
+const program = new Command().version("3.3.0", "-v, --version");
 
 program
   .command("graphql <directory>")
@@ -15,7 +15,7 @@ program
   .option(
     "--schema <path-or-url>",
     "graphql schema, url if starts with https://, otherwise file path",
-    "https://api.trunkery.com/storefront.json"
+    "https://docs.trunkery.com/api/commerce-schema.graphql"
   )
   .action(async (directory, opts) => {
     await graphqlTypescriptCodegen({

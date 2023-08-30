@@ -10,6 +10,12 @@ This project adheres to [Semantic Versioning][semantic versioning].
 
 ## [Released]
 
+## 3.3.0 - 2023-08-30
+
+- Since recently we disabled introspection queries on our API servers. And this was the main source of the graphql
+  schemas for this tool. This patch adds support for raw remote .graphql files. Our docs website host those files with
+  up-to-date schemas. Thus this patch also changes the default schema URL.
+
 ## 3.2.0 - 2022-09-09
 
 - Content model type generator will now fetch built-in content models from API server and add them to the output.
