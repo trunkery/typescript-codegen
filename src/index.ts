@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
-import { Command } from "commander";
 import _ from "lodash";
+import { Command } from "commander";
+
 import { contentModelTypescriptCodegen, graphqlTypescriptCodegen } from "./lib";
 
 const program = new Command().version("3.3.0", "-v, --version");

@@ -1,41 +1,42 @@
 import _ from "lodash";
+import chalk from "chalk";
 import fs from "fs";
 import glob from "glob";
 import path from "path";
+import prompts from "prompts";
 import superagent from "superagent";
 import {
-  getIntrospectionQuery,
-  concatAST,
   DocumentNode,
   GraphQLSchema,
+  Kind,
+  Source,
+  buildClientSchema,
+  buildSchema,
+  concatAST,
+  getIntrospectionQuery,
   isEnumType,
   isInputObjectType,
   parse,
-  Source,
   print,
-  buildClientSchema,
-  buildSchema,
-  Kind,
 } from "graphql";
 import { stripIgnoredCharacters } from "graphql/utilities";
+
+import { ContentModelSchemaType, generateContentModelTypescriptCode, parseContentModelSchema } from "./content-model";
+import { Dict, nonNull } from "./util";
 import {
-  validateDocument,
-  convertType,
-  typeToString,
-  enumToString,
-  resolveTypesSorted,
-  extractImportSpecs,
   ImportSpec,
+  Imports,
   addFragmentDepsRecursive,
+  convertType,
+  enumToString,
+  extractFragmentDeps,
+  extractImportSpecs,
   loadGraphQLFromFile,
   loadImports,
-  extractFragmentDeps,
-  Imports,
+  resolveTypesSorted,
+  typeToString,
+  validateDocument,
 } from "./graphql";
-import { Dict, nonNull } from "./util";
-import chalk from "chalk";
-import prompts from "prompts";
-import { ContentModelSchemaType, generateContentModelTypescriptCode, parseContentModelSchema } from "./content-model";
 
 interface GeneratedFile {
   name: string;

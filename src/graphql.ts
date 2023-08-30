@@ -1,44 +1,45 @@
-import { concatAST } from "graphql/utilities";
-import {
-  GraphQLSchema,
-  DocumentNode,
-  NoUnusedFragmentsRule,
-  KnownDirectivesRule,
-  UniqueOperationNamesRule,
-  ValidationContext,
-  OperationDefinitionNode,
-  GraphQLError,
-  specifiedRules,
-  validate,
-  DefinitionNode,
-  GraphQLType,
-  isNonNullType,
-  SelectionSetNode,
-  isListType,
-  isInputObjectType,
-  isObjectType,
-  isEnumType,
-  isScalarType,
-  GraphQLString,
-  GraphQLInt,
-  GraphQLFloat,
-  GraphQLBoolean,
-  GraphQLID,
-  TypeNode,
-  NameNode,
-  GraphQLEnumType,
-  visit,
-  FragmentDefinitionNode,
-  Source,
-  parse,
-  ValidationRule,
-  Kind,
-  OperationTypeNode,
-} from "graphql";
 import _ from "lodash";
+import fs from "fs";
 import glob from "glob";
 import path from "path";
-import fs from "fs";
+import {
+  DefinitionNode,
+  DocumentNode,
+  FragmentDefinitionNode,
+  GraphQLBoolean,
+  GraphQLEnumType,
+  GraphQLError,
+  GraphQLFloat,
+  GraphQLID,
+  GraphQLInt,
+  GraphQLSchema,
+  GraphQLString,
+  GraphQLType,
+  Kind,
+  KnownDirectivesRule,
+  NameNode,
+  NoUnusedFragmentsRule,
+  OperationDefinitionNode,
+  OperationTypeNode,
+  SelectionSetNode,
+  Source,
+  TypeNode,
+  UniqueOperationNamesRule,
+  ValidationContext,
+  ValidationRule,
+  isEnumType,
+  isInputObjectType,
+  isListType,
+  isNonNullType,
+  isObjectType,
+  isScalarType,
+  parse,
+  specifiedRules,
+  validate,
+  visit,
+} from "graphql";
+import { concatAST } from "graphql/utilities";
+
 import { Dict, nonNull } from "./util";
 
 type ImportData = { kind: "all" } | { kind: "some"; names: string[] };
