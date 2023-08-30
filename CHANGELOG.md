@@ -10,16 +10,33 @@ This project adheres to [Semantic Versioning][semantic versioning].
 
 ## [Released]
 
+## 3.3.1 - 2023-08-30
+
+### Patch Changes
+
+- Commerce API schema file became the default by accident. Corrected the URL. Storefront API schema file is the default
+  now.
+
+---
+
 ## 3.3.0 - 2023-08-30
+
+### Minor Changes
 
 - Since recently we disabled introspection queries on our API servers. And this was the main source of the graphql
   schemas for this tool. This patch adds support for raw remote .graphql files. Our docs website host those files with
   up-to-date schemas. Thus this patch also changes the default schema URL.
 
+---
+
 ## 3.2.0 - 2022-09-09
+
+### Minor Changes
 
 - Content model type generator will now fetch built-in content models from API server and add them to the output.
   This also adds "--api" option, which allows you to override API server URL (internal usage mainly).
+
+---
 
 ## 3.1.1 - 2022-07-15
 
@@ -28,12 +45,16 @@ This project adheres to [Semantic Versioning][semantic versioning].
 - Fix graphql codegen case: fragment uses fragment spread of a fragment which in turns also contains fragment spread.
   In internal codegen type system this generates an intersection with intersection type.
 
+---
+
 ## 3.1.0 - 2022-06-10
 
 ### Minor Changes
 
 - Add "color" string kind to content model.
 - Export more content model schema components.
+
+---
 
 ## 3.0.0 - 2022-06-08
 
@@ -43,11 +64,15 @@ This project adheres to [Semantic Versioning][semantic versioning].
   and checkers for multiple schemas at once now. The idea is to make the path from
   content model name to content model type shorter.
 
+---
+
 ## 2.1.0 - 2022-06-08
 
 ### Minor Changes
 
 - Content Model generator: generate proper type for enums.
+
+---
 
 ## 2.0.0 - 2022-05-31
 
@@ -58,11 +83,15 @@ This project adheres to [Semantic Versioning][semantic versioning].
 - Use a slightly different changelog format.
 - Bump third-party deps.
 
+---
+
 ## 1.1.3 - 2021-09-21
 
 ### Patch Changes
 
 - Fix minification producing broken GraphQL operations.
+
+---
 
 ## 1.1.2 - 2021-09-21
 
@@ -70,11 +99,15 @@ This project adheres to [Semantic Versioning][semantic versioning].
 
 - Minify graphql operations and fragments before writing them out.
 
+---
+
 ## 1.1.1 - 2021-09-15
 
 ### Patch Changes
 
 - Add typescript type definitions (.d.ts files).
+
+---
 
 ## 1.1.0 - 2021-09-15
 
@@ -82,11 +115,15 @@ This project adheres to [Semantic Versioning][semantic versioning].
 
 - Make it possible to use this project as a library.
 
+---
+
 ## 1.0.1 - 2021-09-02
 
 ### Patch Changes
 
 - Fix codegen for top level "intersection" types.
+
+---
 
 ## 1.0.0 - 2021-03-29
 

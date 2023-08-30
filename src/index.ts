@@ -16,7 +16,7 @@ program
   .option(
     "--schema <path-or-url>",
     "graphql schema, url if starts with https://, otherwise file path",
-    "https://docs.trunkery.com/api/commerce-schema.graphql"
+    "https://docs.trunkery.com/api/storefront-schema.graphql"
   )
   .action(async (directory, opts) => {
     await graphqlTypescriptCodegen({
