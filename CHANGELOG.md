@@ -10,12 +10,22 @@ This project adheres to [Semantic Versioning][semantic versioning].
 
 ## [Released]
 
+## 3.3.3 - 2023-08-31
+
+### Patch Changes
+
+- GraphQL code generator now generates type imports as "import type", to be friendlier with stricter typescript configs.
+
+---
+
 ## 3.3.2 - 2023-08-31
 
 ### Patch Changes
 
 - GraphQL code generator now generates .ts files with import statements ending with ".js", to make things compatible
   with ESM style output.
+
+---
 
 ## 3.3.1 - 2023-08-30
 
