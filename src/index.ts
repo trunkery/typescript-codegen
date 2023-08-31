@@ -5,13 +5,14 @@ import { Command } from "commander";
 
 import { contentModelTypescriptCodegen, graphqlTypescriptCodegen } from "./lib";
 
-const program = new Command().version("3.3.3", "-v, --version");
+const program = new Command().version("3.4.0", "-v, --version");
 
 program
   .command("graphql <directory>")
   .option("-I, --include <directory...>", "consider the following directories when importing fragments")
   .option("-t, --token <token>", "jwt token for authorization")
   .option("-q, --quiet", "don't print anything but errors, don't ask for input")
+  .option("--js-suffix", "when generating import statements add .js suffix")
   .option("--allow-unused-fragments", "allow and generate code for unused fragments")
   .option(
     "--schema <path-or-url>",
@@ -28,6 +29,7 @@ program
       schemaPathOrURL: opts.schema,
       schema: undefined,
       token: opts.token,
+      jsSuffix: opts.jsSuffix,
     });
   });
 

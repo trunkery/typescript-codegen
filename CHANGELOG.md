@@ -10,6 +10,15 @@ This project adheres to [Semantic Versioning][semantic versioning].
 
 ## [Released]
 
+## 3.4.0 - 2023-08-31
+
+### Minor Changes
+
+- Generating import statements ending with ".js" is now hidden behind a flag/option. I rushed to make it a default, but
+  it breaks some projects.
+
+---
+
 ## 3.3.3 - 2023-08-31
 
 ### Patch Changes
