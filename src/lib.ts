@@ -88,7 +88,7 @@ function generate(schema: GraphQLSchema, doc: DocumentNode, imports: Imports) {
   } else {
     for (const impName of _.keys(imports.loadedImportsMap).sort()) {
       const imp = nonNull(imports.loadedImportsMap[impName], "import");
-      types += `import { ${imp.name}Fragment } from "${mapPrefix(imports.prefixMap, imp.path)}/types";\n\n`;
+      types += `import { ${imp.name}Fragment } from "${mapPrefix(imports.prefixMap, imp.path)}/types.js";\n\n`;
     }
   }
 
@@ -134,12 +134,12 @@ function generate(schema: GraphQLSchema, doc: DocumentNode, imports: Imports) {
       for (const dep of _.keys(deps).sort()) {
         const [path, name] = _.split(dep, ":", 2);
         allDepNames[name] = true;
-        allDepImports[`import ${name} from "${mapPrefix(imports.prefixMap, path)}/fragments/${name}";`] = true;
+        allDepImports[`import ${name} from "${mapPrefix(imports.prefixMap, path)}/fragments/${name}.js";`] = true;
       }
     }
 
     const depNames = _.keys(allDepNames).sort();
-    const depImports = _.join([..._.keys(allDepImports).sort(), `import { ${op.name}Meta } from "../types";`], "\n");
+    const depImports = _.join([..._.keys(allDepImports).sort(), `import { ${op.name}Meta } from "../types.js";`], "\n");
     const strings = _.join([...depNames, JSON.stringify(stripIgnoredCharacters(print(op.value.node)))], " + ");
     files.push({
       name: `operations/${op.name}.ts`,

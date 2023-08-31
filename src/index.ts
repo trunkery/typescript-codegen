@@ -5,7 +5,7 @@ import { Command } from "commander";
 
 import { contentModelTypescriptCodegen, graphqlTypescriptCodegen } from "./lib";
 
-const program = new Command().version("3.3.0", "-v, --version");
+const program = new Command().version("3.3.2", "-v, --version");
 
 program
   .command("graphql <directory>")
