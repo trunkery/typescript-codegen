@@ -1,4 +1,4 @@
-# Trunkery Typescript Codegen
+# Lana Typescript Codegen
 
 A CLI tool for generating typescript code based on graphql fragments/operations. It does not support all GraphQL features, in particular support for subscriptions is missing.
 
@@ -58,10 +58,10 @@ The operation itself is type casted to its \*Meta type. This allows you to build
 
    ```shell
    # local installation:
-   npm install -D @trunkery/typescript-codegen
+   npm install -D @lana-commerce/typescript-codegen
 
    # global installation:
-   npm install -g @trunkery/typescript-codegen
+   npm install -g @lana-commerce/typescript-codegen
    ```
 
 2. Create a directory with some \*.graphql files in it.
@@ -88,14 +88,14 @@ The operation itself is type casted to its \*Meta type. This allows you to build
 3. Run the tool! (example assumes global installation and proper PATH configuration)
 
    ```sh
-   trunkery-typescript-codegen src/graphql
+   lana-commerce-typescript-codegen src/graphql
    ```
 
    You should see something like this:
 
    ```
    [14:06:01.051] loading graphql file "src/graphql/all.graphql"
-   [14:06:01.055] fetching schema via introspection query from "https://api.trunkery.com/storefront.json"
+   [14:06:01.055] fetching schema via introspection query from "https://api.lana.dev/storefront.json"
    [14:06:01.534] writing data to file "src/graphql/types.ts"
    [14:06:01.535] writing data to file "src/graphql/fragments/MenuShort.ts"
    [14:06:01.535] writing data to file "src/graphql/operations/GetMenuQuery.ts"
